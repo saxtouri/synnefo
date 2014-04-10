@@ -631,7 +631,18 @@ class BurninTests(unittest.TestCase):
                 old_quotas[prj][q_name]['usage'] += q_value
                 old_quotas[prj][q_name]['project_usage'] += q_value
 
-        self.assertEqual(old_quotas, new_quotas)
+        def dicts_are_equal(d1, d2):
+            """Check equality even if the order of items is different"""
+            self.assertEqual(set(d1), set(d2))
+            for k, v in d1.items():
+                if isinstance(v, (list, tuple)):
+                    self.assertEqual(set(v), set(d2[k]))
+                elif isinstance(v, dict):
+                    dicts_are_equal(v, d2[k])
+                else:
+                    self.assertEqual(v, d2[k])
+        dicts_are_equal(old_quotas, new_quotas)
+        #self.assertEqual(old_quotas, new_quotas)
 
     # ----------------------------------
     # Projects
