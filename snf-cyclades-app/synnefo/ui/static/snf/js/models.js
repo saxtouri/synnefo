@@ -1752,7 +1752,7 @@
     }
 
     models.VM.AVAILABLE_ACTIONS = {
-        'UNKNWON'       : ['destroy'],
+        'UNKNOWN'       : ['destroy'],
         'BUILD'         : ['destroy'],
         'REBOOT'        : ['destroy'],
         'STOPPED'       : ['start', 'destroy', 'reassign', 'resize', 'snapshot'],
@@ -1772,7 +1772,7 @@
 
     // api status values
     models.VM.STATUSES = [
-        'UNKNWON',
+        'UNKNOWN',
         'BUILD',
         'REBOOT',
         'STOPPED',
