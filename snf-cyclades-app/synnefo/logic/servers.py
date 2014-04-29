@@ -113,7 +113,7 @@ def create(userid, name, password, flavor, image_id, metadata={},
             v.index = index
             v.save()
         else:
-            v = _create_volume(server=vm, user_id=userid,
+            v = _create_volume(server=vm, user_id=userid, project=project,
                                index=index, **vol_info)
         server_volumes.append(v)
 

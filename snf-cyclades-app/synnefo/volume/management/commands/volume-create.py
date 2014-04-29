@@ -44,6 +44,11 @@ class Command(SynnefoCommand):
             default=None,
             help="UUID of the owner of the volume."),
         make_option(
+            "--project",
+            dest="project",
+            default=None,
+            help="UUID of the project of the volume."),
+        make_option(
             "-s", "--size",
             dest="size",
             default=None,
@@ -77,6 +82,7 @@ class Command(SynnefoCommand):
 
         size = options.get("size")
         user_id = options.get("user_id")
+        project_id = options.get("project")
         server_id = options.get("server_id")
         wait = parse_bool(options["wait"])
 
@@ -94,6 +100,9 @@ class Command(SynnefoCommand):
 
         if user_id is None:
             user_id = vm.userid
+
+        if project_id is None:
+            project_id = vm.project
 
         source_image_id = source_volume_id = source_snapshot_id = None
         source = options.get("source")
@@ -119,7 +128,7 @@ class Command(SynnefoCommand):
                                 source_image_id=source_image_id,
                                 source_snapshot_id=source_snapshot_id,
                                 source_volume_id=source_volume_id,
-                                metadata={})
+                                metadata={}, project=project_id)
 
         self.stdout.write("Created volume '%s' in DB:\n" % volume.id)
 
