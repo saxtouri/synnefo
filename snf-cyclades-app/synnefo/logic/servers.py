@@ -264,6 +264,10 @@ def reassign(vm, project):
                                        action_fields=action_fields)
     vm.project = project
     vm.save()
+    system_volumes = vm.volumes.filter(index=0)
+    for volume in system_volumes:
+        volume.project = project
+        volume.save()
 
 
 @commands.server_command("SET_FIREWALL_PROFILE")
