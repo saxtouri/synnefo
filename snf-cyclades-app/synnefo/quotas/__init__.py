@@ -403,6 +403,8 @@ def get_commission_info(resource, action, action_fields=None):
             return resources
         elif action == "DESTROY":
             return reverse_quantities(resources)
+        elif action == "REASSIGN":
+            return resources
         else:
             return None
 

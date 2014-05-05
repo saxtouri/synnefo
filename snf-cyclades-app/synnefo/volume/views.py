@@ -17,6 +17,7 @@ from itertools import ifilter
 from logging import getLogger
 from django.http import HttpResponse
 from django.utils import simplejson as json
+from django.db import transaction
 
 import datetime
 from dateutil.parser import parse as date_parse
@@ -175,7 +176,7 @@ def delete_volume(request, volume_id):
 def get_volume(request, volume_id):
     log.debug('get_volume volume_id: %s', volume_id)
 
-    volume = util.get.volume(request.user_uniq, volume_id)
+    volume = util.get_volume(request.user_uniq, volume_id)
 
     data = json.dumps({'volume': volume_to_dict(volume, detail=True)})
     return HttpResponse(data, content_type="application/json", status=200)
@@ -201,6 +202,20 @@ def update_volume(request, volume_id):
 
     data = json.dumps({'volume': volume_to_dict(volume, detail=True)})
     return HttpResponse(data, content_type="application/json", status=200)
+
+
+@api.api_method(http_method="POST", user_required=True, logger=log)
+@transaction.commit_on_success
+def reassign_volume(request, volume_id, args):
+    req = utils.get_json_body(request)
+    log.debug('reassign_volume volume_id: %s, request: %s', volume_id, req)
+    volume = util.get_volume(request.user_uniq, volume_id, for_update=True)
+
+    project = args.get("project")
+    if project is None:
+        raise faults.BadRequest("Missing 'project' attribute.")
+    volumes.reassign_volume(volume, project)
+    return HttpResponse(status=200)
 
 
 def snapshot_to_dict(snapshot, detail=True):
