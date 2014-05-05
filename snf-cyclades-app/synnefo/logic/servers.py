@@ -257,13 +257,13 @@ def _resize(vm, flavor):
 
 @transaction.commit_on_success
 def reassign(vm, project):
-    action_fields = {"to_project": project, "from_project": vm.project}
+    action_fields = {"to_project": project}
     log.info("Reassigning VM %s from project %s to %s",
              vm, vm.project, project)
-    vm.project = project
-    vm.save()
     quotas.issue_and_accept_commission(vm, action="REASSIGN",
                                        action_fields=action_fields)
+    vm.project = project
+    vm.save()
 
 
 @commands.server_command("SET_FIREWALL_PROFILE")

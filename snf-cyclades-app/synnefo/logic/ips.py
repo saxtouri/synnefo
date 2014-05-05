@@ -216,11 +216,10 @@ def delete_floating_ip(floating_ip):
 
 @transaction.commit_on_success
 def reassign_floating_ip(floating_ip, project):
-    action_fields = {"to_project": project,
-                     "from_project": floating_ip.project}
+    action_fields = {"to_project": project}
     log.info("Reassigning floating IP %s from project %s to %s",
              floating_ip, floating_ip.project, project)
-    floating_ip.project = project
-    floating_ip.save()
     quotas.issue_and_accept_commission(floating_ip, action="REASSIGN",
                                        action_fields=action_fields)
+    floating_ip.project = project
+    floating_ip.save()

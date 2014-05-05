@@ -162,11 +162,11 @@ def delete(network):
 
 @network_command("REASSIGN")
 def reassign(network, project):
-    action_fields = {"to_project": project, "from_project": network.project}
+    action_fields = {"to_project": project}
     log.info("Reassigning network %s from project %s to %s",
              network, network.project, project)
-    network.project = project
-    network.save()
     quotas.issue_and_accept_commission(network, action="REASSIGN",
                                        action_fields=action_fields)
+    network.project = project
+    network.save()
     return network
